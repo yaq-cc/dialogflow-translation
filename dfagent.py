@@ -14,18 +14,19 @@ class DialogflowAgent:
 
     DO_NOT_TRANSLATE = ['@sys.name', '@sys.person', '@sys.geo-city']
 
-    def __init__(self, agent_zip: str, overwrite=False, source='en', target='es'):
+    def __init__(self, agent_zip: str, overwrite=False, source='en', target='es', outfile=None):
         self.agent_zip = agent_zip
         self.translator = translate.Client()
         self.source = source
         self.target = target
         self.agent_name = self.check_agent(self.agent_zip, overwrite=overwrite)
+        self.outfile = outfile
         self.response_intents: List[str] = []
         self.intents: List[str] = []
         self.get_intents()
 
     def __del__(self):
-        new_zip = 'new_' + self.agent_zip
+        new_zip = 'new_' + self.agent_zip if self.outfile is None else self.outfile
         zip_fps = []
         for root, dirs, files in os.walk(self.agent_name):
             for file in files:
@@ -111,7 +112,6 @@ class DialogflowAgent:
             with open(response_fp, 'w')  as dest:
                 json.dump(new_response_intent, dest, indent=4)
 
-
     def translate_intent(self, intent_fp):
         with open(intent_fp, 'r') as src:
             response_intent = json.load(src)
@@ -135,16 +135,4 @@ class DialogflowAgent:
             with open(new_intent_fp, 'w') as src:
                 tx = self.translate_intent(intent)
                 json.dump(tx, src, indent=4)
-
-
-
-
-        # for intent in source_intents:
-        #     self.translate_intent(intent)
-
-        
-
-                    
-
-
                 
