@@ -25,7 +25,7 @@ class AgentTranslatorInterface:
     def print(self):
         print(self.args)
 
-
+# Module testing purposes only!
 if __name__ == '__main__':
     txi = AgentTranslatorInterface()
     txi.print()
